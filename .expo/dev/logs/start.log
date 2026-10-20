@@ -43,3 +43,6 @@
 {"_e":"metro:bundling:started","_t":1792509590289,"id":"7","platform":"ios","environment":null,"entry":"index.js"}
 {"_e":"metro:bundling:progress","_t":1792509590289,"id":"7","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1792509590326,"id":"7","total":1,"ms":36.964708}
+{"_e":"metro:bundling:started","_t":1792509977376,"id":"8","platform":"ios","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1792509977376,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1792509977429,"id":"8","total":1,"ms":53.108458}
