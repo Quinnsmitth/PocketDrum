@@ -1,0 +1,45 @@
+{"_e":"root:init","_t":1792508968167,"format":"v0-jsonl","version":"57.0.31"}
+{"_e":"env:mode","_t":1792508968167,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1792508968168,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1792508968236,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1792508968335,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1792508968398,"plugins":[]}
+{"_e":"metro:instantiate","_t":1792508968505,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1792508979113,"id":"1","platform":"ios","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1792508979113,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1792508979116,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1792508979216,"id":"1","progress":0.39540058777940623,"total":361,"current":227}
+{"_e":"metro:bundling:progress","_t":1792508979316,"id":"1","progress":0.7972943145886291,"total":635,"current":567}
+{"_e":"metro:bundling:done","_t":1792508979380,"id":"1","total":635,"ms":266.953584}
+{"_e":"root:init","_t":1792509123186,"format":"v0-jsonl","version":"57.0.31"}
+{"_e":"env:mode","_t":1792509123186,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1792509123187,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1792509123270,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1792509123415,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1792509123508,"plugins":[]}
+{"_e":"metro:instantiate","_t":1792509123672,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1792509377766,"id":"1","platform":"ios","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1792509377766,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1792509377769,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1792509377869,"id":"1","progress":0.4372470824979253,"total":369,"current":244}
+{"_e":"metro:bundling:progress","_t":1792509377977,"id":"1","progress":0.8522848925823778,"total":664,"current":613}
+{"_e":"metro:bundling:done","_t":1792509378024,"id":"1","total":664,"ms":257.872292}
+{"_e":"metro:client_log","_t":1792509378919,"level":"error","data":["[Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: object. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `withDevTools(Anonymous)`.]"]}
+{"_e":"metro:bundling:failed","_t":1792509402204,"id":null,"message":"SyntaxError: /Users/quinnsmith/Desktop/PocketDrum/App.js: Identifier 'ScrollView' has already been declared. (2:9)\n\n  1 | import { Text, View, Pressable, StyleSheet, ScrollView } from 'react-native';\n> 2 | import { ScrollView } from 'react-native/types_generated/index';\n    |          ^\n  3 |\n  4 | export default function App (){\n  5 |     return(","importStack":null,"filename":"App.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:failed","_t":1792509410176,"id":null,"message":"SyntaxError: /Users/quinnsmith/Desktop/PocketDrum/App.js: Unexpected token (9:4)\n\n   7 |         </ScrollView>>\n   8 |\n>  9 |     );\n     |     ^\n  10 | }","importStack":null,"filename":"App.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:failed","_t":1792509419981,"id":null,"message":"SyntaxError: /Users/quinnsmith/Desktop/PocketDrum/App.js: Unexpected token (9:4)\n\n   7 |         </ScrollView>>\n   8 |\n>  9 |     );\n     |     ^\n  10 | }","importStack":null,"filename":"App.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:started","_t":1792509472636,"id":"5","platform":"ios","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1792509472637,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1792509472638,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:failed","_t":1792509472647,"id":"5","message":"SyntaxError: /Users/quinnsmith/Desktop/PocketDrum/App.js: Unexpected token (9:4)\n\n   7 |         </ScrollView>>\n   8 |\n>  9 |     );\n     |     ^\n  10 | }","importStack":null,"filename":"App.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:started","_t":1792509584363,"id":"6","platform":"ios","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1792509584363,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1792509584366,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1792509584447,"id":"6","total":1,"ms":83.47625}
+{"_e":"metro:client_log","_t":1792509585713,"level":"warn","data":["No native ExponentConstants module found, are you sure the expo-constants's module is linked properly?"]}
+{"_e":"metro:client_log","_t":1792509585714,"level":"error","data":["[runtime not ready]: Error: Cannot find native module 'ExpoAsset'"]}
+{"_e":"metro:client_log","_t":1792509585720,"level":"error","data":["[runtime not ready]: Invariant Violation: \"main\" has not been registered. This can happen if:\n* Metro (the local dev server) is run from the wrong folder. Check if Metro is running, stop it and restart it in the current project.\n* A module failed to load due to an error and `AppRegistry.registerComponent` wasn't called."]}
+{"_e":"metro:client_log","_t":1792509590274,"level":"error","data":["[runtime not ready]: Error: Non-js exception: AppRegistryBinding::stopSurface failed. Global was not installed."]}
+{"_e":"metro:bundling:started","_t":1792509590289,"id":"7","platform":"ios","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1792509590289,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1792509590326,"id":"7","total":1,"ms":36.964708}
