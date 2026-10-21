@@ -1,11 +1,13 @@
-import { Text, View, StyleSheet, useWindowDimensions } from 'react-native';
+import { Text, View, StyleSheet, useWindowDimensions, Pressable } from 'react-native';
 
 export default function App() {
     const { height, width } = useWindowDimensions();
-
+    const checkPress= () =>{
+        console.log("button Pressed")
+    }
     return (
         <View style={styles.screen}>
-            <Text style={styles.header}>PocketDrum</Text>
+            <Text style={styles.header}>Pocket Drum</Text>
 
             <View
                 style={[
@@ -24,9 +26,9 @@ export default function App() {
                     Pick a sound, tap the steps you want to hear, and press play.
                 </Text>
 
-                <View style={styles.topBox_button}>
+                <Pressable onPress= {checkPress} style={styles.topBox_button}>
                     <Text>+ Create new beat</Text>
-                </View>
+                </Pressable>
             </View>
 
             
@@ -40,13 +42,13 @@ export default function App() {
                 ]}
             >
                 <Text style={styles.c_text}>Load Recent</Text>
-                <View style={styles.middleBox_button}>
+                <Pressable onPress={checkPress} style={styles.middleBox_button}>
                     <Text>Continue editing</Text>
-                </View>
+                </Pressable>
             </View>
 
 
-            <View
+            <Pressable onPress={checkPress}
                 style={[
                     styles.bottomBox,
                     {
@@ -58,7 +60,7 @@ export default function App() {
                 <Text style={styles.c_text_bottom}>
                     View saved patterns
                 </Text>
-            </View>
+            </Pressable>
 
             <View style={styles.nav} />
         </View>
