@@ -7,7 +7,6 @@ export default function App() {
         <View style={styles.screen}>
             <Text style={styles.header}>PocketDrum</Text>
 
-            {/* Start a new beat */}
             <View
                 style={[
                     styles.topBox,
@@ -30,7 +29,7 @@ export default function App() {
                 </View>
             </View>
 
-            {/* Load recent beats */}
+            
             <View
                 style={[
                     styles.middleBox,
@@ -41,9 +40,12 @@ export default function App() {
                 ]}
             >
                 <Text style={styles.c_text}>Load Recent</Text>
+                <View style={styles.middleBox_button}>
+                    <Text>Continue editing</Text>
+                </View>
             </View>
 
-            {/* View saved patterns */}
+
             <View
                 style={[
                     styles.bottomBox,
@@ -58,11 +60,9 @@ export default function App() {
                 </Text>
             </View>
 
-            {/* Bottom navigation bar */}
             <View style={styles.nav} />
         </View>
-    );
-}
+    );}
 
 const styles = StyleSheet.create({
     nav: {
@@ -97,13 +97,13 @@ const styles = StyleSheet.create({
     },
 
     topBox_button: {
-        height: 40,
+        height: 60,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
         borderWidth: 2,
         borderColor: 'black',
-        marginTop: 10,
+        marginTop: 20,
     },
 
     middleBox: {
@@ -113,6 +113,16 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    middleBox_button:{
+        height: 60,
+        width: '94%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: 'black',
+        marginTop: 20,
     },
 
     bottomBox: {
@@ -137,10 +147,11 @@ const styles = StyleSheet.create({
     c_text_top_box_header: {
         fontSize: 20,
         fontWeight: 'bold',
+        marginTop:5
     },
 
     c_text_top_box_body: {
         color: 'grey',
-        marginTop: 5,
+        marginTop: 20,
     },
 });
