@@ -6,64 +6,81 @@ export default function App() {
         console.log("button Pressed")
     }
     return (
-        <View style={styles.screen}>
-            <Text style={styles.header}>Pocket Drum</Text>
+    <View style={styles.screen}>
+        <Text style={styles.header}>Pocket Drum</Text>
 
-            <View
-                style={[
-                    styles.topBox,
-                    {
-                        height: height * 0.22,
-                        width: width * 0.92,
-                    },
-                ]}
-            >
-                <Text style={styles.c_text_top_box_header}>
-                    Start with a simple beat
-                </Text>
+        <View
+            style={[
+                styles.topBox,
+                {
+                    height: height * 0.22,
+                    width: width * 0.92,
+                },
+            ]}
+        >
+            <Text style={styles.c_text_top_box_header}>
+                Start with a simple beat
+            </Text>
 
-                <Text style={styles.c_text_top_box_body}>
-                    Pick a sound, tap the steps you want to hear, and press play.
-                </Text>
+            <Text style={styles.c_text_top_box_body}>
+                Pick a sound, tap the steps you want to hear, and press play.
+            </Text>
 
-                <Pressable onPress= {checkPress} style={styles.topBox_button}>
-                    <Text>+ Create new beat</Text>
-                </Pressable>
-            </View>
+            <Pressable onPress= {checkPress} style={styles.topBox_button}>
+                <Text>+ Create new beat</Text>
+            </Pressable>
+        </View>
 
             
-            <View
-                style={[
-                    styles.middleBox,
-                    {
-                        height: height * 0.35,
-                        width: width * 0.92,
-                    },
-                ]}
-            >
-                <Text style={styles.c_text}>Load Recent</Text>
-                <Pressable onPress={checkPress} style={styles.middleBox_button}>
-                    <Text>Continue editing</Text>
-                </Pressable>
-            </View>
+        <View
+            style={[
+                styles.middleBox,
+                {
+                    height: height * 0.35,
+                    width: width * 0.92,
+                },
+            ]}
+        >
+            <Text style={styles.c_text}>Load Recent</Text>
+            <Pressable onPress={checkPress} style={styles.middleBox_button}>
+                <Text>Continue editing</Text>
+            </Pressable>
+        </View>
 
 
-            <Pressable onPress={checkPress}
-                style={[
-                    styles.bottomBox,
-                    {
-                        height: height * 0.08,
-                        width: width * 0.92,
-                    },
-                ]}
-            >
-                <Text style={styles.c_text_bottom}>
-                    View saved patterns
-                </Text>
+        <Pressable onPress={checkPress}
+            style={[
+                styles.bottomBox,
+                {
+                    height: height * 0.08,
+                    width: width * 0.92,
+                },
+            ]}
+        >
+            <Text style={styles.c_text_bottom}>
+                View saved patterns
+            </Text>
+        </Pressable>
+
+        <View style={styles.nav}>
+            <Pressable style={styles.nav_icons}>
+                <Text>Home</Text>
             </Pressable>
 
-            <View style={styles.nav} />
+            <Pressable style={styles.nav_icons}>
+                <Text>Beat</Text>
+            </Pressable>
+
+            <Pressable style={styles.nav_icons}>
+                <Text>Sounds</Text>
+            </Pressable>
+
+            <Pressable style={styles.nav_icons}>
+                <Text>Saved</Text>
+            </Pressable>
         </View>
+    </View>
+
     );}
 
 const styles = StyleSheet.create({
@@ -75,8 +92,20 @@ const styles = StyleSheet.create({
         bottom: 0,
         borderColor: 'grey',
         borderWidth: 2,
+        justifyContent: 'space-around',
+        flex:1,
+        flexDirection: 'row'
     },
-
+    nav_icons:{
+    marginTop: 5,
+    width: '22%',
+    height: 65,
+    borderWidth: 2,
+    borderColor: 'grey',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    },
     header: {
         fontSize: 35,
         marginBottom: 30,
