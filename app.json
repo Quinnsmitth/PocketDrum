@@ -3,7 +3,7 @@
     "name": "PocketDrum",
     "slug": "PocketDrum",
     "version": "1.0.0",
-    "orientation": "landscape",
+    "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {

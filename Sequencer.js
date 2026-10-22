@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, Pressable, StyleSheet, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import {useFocusEffect} from "@react-navigation/native";
 
 export default function Sequencer() {
   // Automatically lock the screen to landscape mode on mount
-  useEffect(() => {
+  useFocusEffect(() => {
     async function lockOrientation() {
       await ScreenOrientation.lockAsync(
         ScreenOrientation.OrientationLock.LANDSCAPE
