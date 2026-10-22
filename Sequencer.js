@@ -12,7 +12,7 @@ export default function Sequencer() {
     }
     lockOrientation();
 
-    // Optional: unlock when leaving the screen
+    // Optional: unlock when leaving the screen.
     return () => {
       ScreenOrientation.unlockAsync();
     };
