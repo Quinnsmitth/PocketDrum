@@ -1,7 +1,6 @@
 import { Text, View, Pressable, StyleSheet } from 'react-native';
 import { useState } from 'react';
-import {turnColor} from './press'
-export default function Squencer() {
+export function Squencer() {
 
   // Sets default instruments
   const instruments = [
