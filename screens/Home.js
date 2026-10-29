@@ -1,4 +1,3 @@
-
 import {
   Text,
   View,
@@ -7,14 +6,8 @@ import {
   Pressable,
 } from 'react-native';
 
-import { NavBar } from './NavBar';
-
 export default function Home({ navigation }) {
   const { height, width } = useWindowDimensions();
-
-  const checkPress = () => {
-    console.log('Button pressed');
-  };
 
   return (
     <View style={styles.screen}>
@@ -29,19 +22,16 @@ export default function Home({ navigation }) {
           },
         ]}
       >
-        <Text style={styles.c_text_top_box_header}>
-          Start with a simple beat
-        </Text>
-
-        <Text style={styles.c_text_top_box_body}>
+        <Text style={styles.topBoxHeader}>Start with a simple beat</Text>
+        <Text style={styles.topBoxBody}>
           Pick a sound, tap the steps you want to hear, and press play.
         </Text>
 
         <Pressable
-          onPress={checkPress}
-          style={styles.topBox_button}
+          onPress={() => navigation.replace('Sequencer', { mode: 'new' })}
+          style={styles.topBoxButton}
         >
-          <Text>+ Create new beat</Text>
+          <Text>Create new beat</Text>
         </Pressable>
       </View>
 
@@ -54,35 +44,35 @@ export default function Home({ navigation }) {
           },
         ]}
       >
-        <Text style={styles.c_text}>Load Recent</Text>
+        <Text style={styles.sectionText}>Load Recent</Text>
 
         <Pressable
-          onPress={checkPress}
-          style={styles.middleBox_button}
+          onPress={() => navigation.replace('Sequencer', { mode: 'recent' })}
+          style={styles.middleBoxButton}
         >
           <Text>Continue editing</Text>
         </Pressable>
       </View>
 
       <Pressable
-        onPress={checkPress}
+        onPress={() => navigation.replace('Saved')}
         style={[
-          styles.bottomBox,
+          styles.savedButton,
           {
             height: height * 0.08,
             width: width * 0.92,
           },
         ]}
       >
-        <Text style={styles.c_text_bottom}>
-          View saved patterns
-        </Text>
+        <Text style={styles.savedButtonText}>View saved patterns</Text>
       </Pressable>
 
-      <NavBar
-        active="Home"
-        navigation={navigation}
-      />
+      <Pressable
+        onPress={() => navigation.replace('DrumPad')}
+        style={styles.drumPadButton}
+      >
+        <Text style={styles.drumPadButtonText}>Drum Pad</Text>
+      </Pressable>
     </View>
   );
 }
@@ -92,16 +82,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     paddingTop: 75,
-    paddingBottom: 110,
+    paddingBottom: 24,
     alignItems: 'center',
     gap: 12,
   },
-
   header: {
     fontSize: 35,
     marginBottom: 30,
   },
-
   topBox: {
     backgroundColor: 'white',
     borderRadius: 20,
@@ -109,8 +97,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     padding: 12,
   },
-
-  topBox_button: {
+  topBoxButton: {
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
@@ -119,7 +106,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     marginTop: 20,
   },
-
   middleBox: {
     backgroundColor: 'white',
     borderRadius: 20,
@@ -128,8 +114,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  middleBox_button: {
+  middleBoxButton: {
     height: 60,
     width: '94%',
     justifyContent: 'center',
@@ -139,8 +124,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     marginTop: 20,
   },
-
-  bottomBox: {
+  savedButton: {
     backgroundColor: 'white',
     borderRadius: 20,
     borderWidth: 2,
@@ -148,25 +132,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  c_text: {
+  sectionText: {
     textAlign: 'center',
     color: 'black',
   },
-
-  c_text_bottom: {
+  savedButtonText: {
     color: 'black',
     fontSize: 16,
   },
-
-  c_text_top_box_header: {
+  topBoxHeader: {
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 5,
   },
-
-  c_text_top_box_body: {
+  topBoxBody: {
     color: 'grey',
     marginTop: 20,
+  },
+  drumPadButton: {
+    width: '92%',
+    height: 60,
+    marginTop: 'auto',
+    borderWidth: 2,
+    borderColor: 'black',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  drumPadButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
