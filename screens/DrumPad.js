@@ -5,7 +5,7 @@ export function DrumPad({ navigation }) {
   return (
     <View style={styles.screen}>
       <Text style={styles.text}>This is the DrumPad Screen</Text>
-     <NavBar navigation={navigation} />
+      <NavBar navigation={navigation} />
     </View>
   );
 }
