@@ -3,6 +3,7 @@ node_modules/
 
 # Expo
 .expo/
+.expo/dev/logs/start.log
 dist/
 web-build/
 
@@ -31,4 +32,3 @@ ios/
 # Temporary files
 *.log
 *.tmp
-```
