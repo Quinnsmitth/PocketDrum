@@ -1,32 +1,63 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Text,
   View,
   Pressable,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
   StatusBar,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
-export default function Sequencer() {
-  // Automatically lock the screen to landscape mode on mount
-  useEffect(() => {
-    async function lockOrientation() {
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.LANDSCAPE
+export function Sequencer({ navigation }) {
+  // Handle orientation when entering and leaving the Sequencer.
+  useFocusEffect(
+    useCallback(() => {
+      let orientationChanged = false;
+
+      const setLandscape = async () => {
+        if (orientationChanged) return;
+
+        orientationChanged = true;
+
+        try {
+          await ScreenOrientation.lockAsync(
+            ScreenOrientation.OrientationLock.LANDSCAPE
+          );
+
+          console.log('Landscape orientation enabled');
+        } catch (error) {
+          console.error('Landscape orientation error:', error);
+        }
+      };
+
+      // Wait for the navigation transition to finish.
+      const unsubscribe = navigation.addListener(
+        'transitionEnd',
+        (event) => {
+          if (!event.data?.closing) {
+            setLandscape();
+          }
+        }
       );
-    }
 
-    lockOrientation();
+      // Fallback if the transition event does not fire.
+      const fallback = setTimeout(setLandscape, 500);
 
-    // Unlock orientation when leaving the screen
-    return () => {
-      ScreenOrientation.unlockAsync();
-    };
-  }, []);
+      return () => {
+        clearTimeout(fallback);
+        unsubscribe();
+
+        ScreenOrientation.lockAsync(
+          ScreenOrientation.OrientationLock.PORTRAIT_UP
+        ).catch((error) => {
+          console.error('Portrait orientation error:', error);
+        });
+      };
+    }, [navigation])
+  );
 
   const instruments = [
     'Kick',
@@ -38,7 +69,7 @@ export default function Sequencer() {
     'Base',
   ];
 
-  // Initialize 7 rows of 24 steps
+  // Initialize 7 rows of 24 steps.
   const [pattern, setPattern] = useState(
     Array.from({ length: 7 }, () => Array(24).fill(false))
   );
@@ -46,7 +77,7 @@ export default function Sequencer() {
   const [bpm, setBpm] = useState(120);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Toggle an individual step
+  // Toggle an individual step.
   const toggleStep = (rowIndex, stepIndex) => {
     const newPattern = pattern.map((row) => [...row]);
 
@@ -56,13 +87,13 @@ export default function Sequencer() {
     setPattern(newPattern);
   };
 
-  // Adjust BPM between 40 and 200
+  // Adjust BPM between 40 and 200.
   const adjustBpm = (delta) => {
     setBpm((prev) => Math.min(200, Math.max(40, prev + delta)));
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
 
       {/* Top Header */}
@@ -80,9 +111,8 @@ export default function Sequencer() {
         </Pressable>
       </View>
 
-      {/* Main Landscape Layout: Grid Left / Controls Right */}
+      {/* Main Landscape Layout */}
       <View style={styles.mainLayout}>
-
         {/* Left Column: Sequencer Grid */}
         <View style={styles.gridSection}>
           <View style={styles.gridHeaderRow}>
@@ -118,7 +148,10 @@ export default function Sequencer() {
 
                 {/* Instrument Rows */}
                 {instruments.map((instrument, rowIndex) => (
-                  <View key={rowIndex} style={styles.instrumentBlock}>
+                  <View
+                    key={rowIndex}
+                    style={styles.instrumentBlock}
+                  >
                     <Text style={styles.instrumentLabel}>
                       {instrument}
                     </Text>
@@ -154,9 +187,8 @@ export default function Sequencer() {
           </ScrollView>
         </View>
 
-        {/* Right Column: Playback & Tempo Controls */}
+        {/* Right Column: Playback and Tempo Controls */}
         <View style={styles.controlsSection}>
-
           {/* Play / Stop Controls */}
           <View style={styles.playStopGroup}>
             <Pressable
@@ -214,7 +246,7 @@ export default function Sequencer() {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -289,6 +321,10 @@ const styles = StyleSheet.create({
   barInfo: {
     fontSize: 11,
     color: '#777777',
+  },
+
+  horizontalScrollContainer: {
+    flexGrow: 0,
   },
 
   stepNumbersRow: {

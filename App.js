@@ -1,10 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Home from './screens/Home.js';
-import { Saved } from './screens/Saved.js';
+import { Home } from './screens/Home.js';
+import { Saved }  from './screens/Saved.js';
 import { Sequencer } from './screens/Sequencer.js';
-import { DrumPad } from './screens/DrumPad.js';
+import  { DrumPad } from './screens/DrumPad.js';
 
 const Stack = createNativeStackNavigator();
 

@@ -6,7 +6,7 @@ import {
   Pressable,
 } from 'react-native';
 
-export default function Home({ navigation }) {
+export function Home({ navigation }) {
   const { height, width } = useWindowDimensions();
 
   return (
