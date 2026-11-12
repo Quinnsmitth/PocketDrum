@@ -1,25 +1,91 @@
 
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { useAudioPlayer } from 'expo-audio';
 import { NavBar } from './NavBar';
 
 const DRUM_PADS = [
-  { id: 'kick', name: 'KICK', color: '#000000' },
-  { id: 'snare', name: 'SNARE', color: '#000000' },
-  { id: 'closedHat', name: 'CLOSED HAT', color: '#000000' },
-  { id: 'openHat', name: 'OPEN HAT', color: '#000000' },
-  { id: 'clap', name: 'CLAP', color: '#000000' },
-  { id: 'tom', name: 'TOM', color: '#000000' },
-  { id: 'crash', name: 'CRASH', color: '#000000' },
-  { id: 'ride', name: 'RIDE', color: '#000000' },
-  { id: 'rim', name: 'RIM', color: '#000000' },
+  {
+    id: 'kick',
+    name: 'KICK',
+    color: '#000000',
+    sound: require('../assets/sounds/'),
+  },
+  {
+    id: 'snare',
+    name: 'SNARE',
+    color: '#000000',
+    sound: require('../assets/sounds/'),
+  },
+  {
+    id: 'closedHat',
+    name: 'CLOSED HAT',
+    color: '#000000',
+    sound: require('../assets/sounds/'),
+  },
+  {
+    id: 'openHat',
+    name: 'OPEN HAT',
+    color: '#000000',
+    sound: require('../assets/sounds/'),
+  },
+  {
+    id: 'clap',
+    name: 'CLAP',
+    color: '#000000',
+    sound: require('../assets/sounds/'),
+  },
+  {
+    id: 'tom',
+    name: 'TOM',
+    color: '#000000',
+    sound: require('../assets/sounds/'),
+  },
+  {
+    id: 'crash',
+    name: 'CRASH',
+    color: '#000000',
+    sound: require('../assets/sounds/'),
+  },
+  {
+    id: 'ride',
+    name: 'RIDE',
+    color: '#000000',
+    sound: require('../assets/sounds/'),
+  },
+  {
+    id: 'rim',
+    name: 'RIM',
+    color: '#000000',
+    sound: require('../assets/sounds/'),
+  },
 ];
 
-export function DrumPad({ navigation }) {
+// Individual pad component
+function DrumPadButton({ pad }) {
+  const player = useAudioPlayer(pad.sound);
 
-  function handlePadPress(pad) {
-    console.log('Pressed:', pad);
+  function handlePress() {
+    player.seekTo(0);
+    player.play();
   }
 
+  return (
+    <Pressable
+      onPress={handlePress}
+      style={({ pressed }) => [
+        styles.pad,
+        { backgroundColor: pad.color },
+        pressed && styles.padPressed,
+      ]}
+    >
+      <Text style={styles.padText}>
+        {pad.name}
+      </Text>
+    </Pressable>
+  );
+}
+
+export function DrumPad({ navigation }) {
   return (
     <View style={styles.screen}>
 
@@ -31,21 +97,10 @@ export function DrumPad({ navigation }) {
 
       <View style={styles.padContainer}>
         {DRUM_PADS.map((pad) => (
-          <Pressable
-            key={pad.id}
-            onPress={() => handlePadPress(pad.id)}
-            style={({ pressed }) => [
-              styles.pad,
-              { backgroundColor: pad.color },
-              pressed && styles.padPressed,
-            ]}
-          >
-            <Text style={styles.padText}>
-              {pad.name}
-            </Text>
-          </Pressable>
+          <DrumPadButton key={pad.id} pad={pad} />
         ))}
       </View>
+
       <NavBar active="DrumPad" navigation={navigation} />
 
     </View>
