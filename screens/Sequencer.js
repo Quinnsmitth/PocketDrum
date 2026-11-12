@@ -58,7 +58,12 @@ export function Sequencer({ navigation }) {
   const playersRef = useRef(players);
   playersRef.current = players;
 
-  
+  // Let the sequencer play even when the iPhone's silent switch is on.
+  useEffect(() => {
+    setAudioModeAsync({ playsInSilentMode: true }).catch((error) =>
+      console.log('Audio mode error:', error)
+    );
+  }, []);
 
   // Dynamically size the 16 steps to fit the screen.
   const stepWidth = Math.max(22, Math.min(44, (width - 240) / 16));
@@ -134,7 +139,45 @@ export function Sequencer({ navigation }) {
   patternRef.current = pattern;
   bpmRef.current = bpm;
 
-  
+  // Playback loop: 16th notes, with drift correction so tempo stays steady.
+  useEffect(() => {
+    if (!isPlaying) {
+      setCurrentStep(-1);
+      return undefined;
+    }
+
+    let step = 0;
+    let nextTime = Date.now();
+    let timer = null;
+    let cancelled = false;
+
+    const tick = () => {
+      if (cancelled) return;
+
+      patternRef.current.forEach((row, rowIndex) => {
+        if (row[step]) restart(playersRef.current[rowIndex]);
+      });
+      setCurrentStep(step);
+
+      step = (step + 1) % STEPS;
+      const stepMs = 60000 / bpmRef.current / 4;
+      nextTime += stepMs;
+
+      // If we fell far behind (app paused, etc.), resync instead of bursting.
+      const now = Date.now();
+      if (nextTime < now - stepMs) nextTime = now;
+
+      timer = setTimeout(tick, Math.max(0, nextTime - now));
+    };
+
+    tick();
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [isPlaying]);
+
   // Toggle an individual step. Turning a step on previews its sound.
   const toggleStep = (rowIndex, stepIndex) => {
     const turningOn = !pattern[rowIndex][stepIndex];
