@@ -7,11 +7,18 @@ import {
   StyleSheet,
   ScrollView,
   StatusBar,
+  useWindowDimensions,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
 export function Sequencer({ navigation }) {
+  const { width } = useWindowDimensions();
+
+  // Dynamically size the 16 steps to fit the screen.
+  const stepWidth = Math.max(22, Math.min(44, (width - 240) / 16));
+  const gridWidth = (stepWidth + 2) * 16;
+
   // Handle orientation when entering and leaving the Sequencer.
   useFocusEffect(
     useCallback(() => {
@@ -33,7 +40,6 @@ export function Sequencer({ navigation }) {
         }
       };
 
-      // Wait for the navigation transition to finish.
       const unsubscribe = navigation.addListener(
         'transitionEnd',
         (event) => {
@@ -43,7 +49,6 @@ export function Sequencer({ navigation }) {
         }
       );
 
-      // Fallback if the transition event does not fire.
       const fallback = setTimeout(setLandscape, 500);
 
       return () => {
@@ -69,9 +74,9 @@ export function Sequencer({ navigation }) {
     'Base',
   ];
 
-  // Initialize 7 rows of 24 steps.
+  // Initialize 7 rows of 16 steps.
   const [pattern, setPattern] = useState(
-    Array.from({ length: 7 }, () => Array(24).fill(false))
+    Array.from({ length: 7 }, () => Array(16).fill(false))
   );
 
   const [bpm, setBpm] = useState(120);
@@ -92,6 +97,11 @@ export function Sequencer({ navigation }) {
     setBpm((prev) => Math.min(200, Math.max(40, prev + delta)));
   };
 
+  // Return to Home.
+  const goHome = () => {
+    navigation.navigate('Home');
+  };
+
   return (
     <View style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
@@ -105,19 +115,55 @@ export function Sequencer({ navigation }) {
           </Text>
         </View>
 
-        <Pressable style={styles.saveButton}>
-          {/* TODO: Add save functionality */}
-          <Text style={styles.saveButtonText}>Save</Text>
-        </Pressable>
+        <View style={styles.headerButtons}>
+
+          {/* Play / Stop Controls */}
+          <Pressable
+            style={[
+              styles.controlBtn,
+              isPlaying && styles.activeControlBtn,
+            ]}
+            onPress={() => setIsPlaying(true)}
+          >
+            <Text style={styles.controlBtnText}>▶ Play</Text>
+          </Pressable>
+
+          <Pressable
+            style={[
+              styles.controlBtn,
+              !isPlaying && styles.activeControlBtn,
+            ]}
+            onPress={() => setIsPlaying(false)}
+          >
+            <Text style={styles.controlBtnText}>⏹ Stop</Text>
+          </Pressable>
+
+          <Pressable
+            style={styles.homeButton}
+            onPress={goHome}
+          >
+            <Text style={styles.homeButtonText}>Home</Text>
+          </Pressable>
+
+          <Pressable style={styles.saveButton}>
+            {/* TODO: Add save functionality */}
+            <Text style={styles.saveButtonText}>Save</Text>
+          </Pressable>
+        </View>
       </View>
+
+      {/* Playback Status */}
+      <Text style={styles.statusText}>
+        {isPlaying ? 'Playing...' : 'Stopped'}
+      </Text>
 
       {/* Main Landscape Layout */}
       <View style={styles.mainLayout}>
+
         {/* Left Column: Sequencer Grid */}
         <View style={styles.gridSection}>
           <View style={styles.gridHeaderRow}>
             <Text style={styles.sectionTitle}>Your pattern</Text>
-            <Text style={styles.barInfo}>1 bar · 4 beats</Text>
           </View>
 
           <ScrollView
@@ -130,14 +176,19 @@ export function Sequencer({ navigation }) {
               showsHorizontalScrollIndicator={false}
               style={styles.horizontalScrollContainer}
             >
-              <View>
+              <View style={{ width: gridWidth }}>
+
                 {/* Step Numbers */}
                 <View style={styles.stepNumbersRow}>
-                  {Array.from({ length: 24 }).map((_, i) => (
+                  {Array.from({ length: 16 }).map((_, i) => (
                     <Text
                       key={i}
                       style={[
                         styles.stepNumber,
+                        {
+                          width: stepWidth,
+                          marginRight: 2,
+                        },
                         i % 4 === 0 && styles.boldStepNumber,
                       ]}
                     >
@@ -165,6 +216,9 @@ export function Sequencer({ navigation }) {
                           }
                           style={[
                             styles.step,
+                            {
+                              width: stepWidth,
+                            },
                             step
                               ? styles.stepActive
                               : styles.stepInactive,
@@ -187,36 +241,10 @@ export function Sequencer({ navigation }) {
           </ScrollView>
         </View>
 
-        {/* Right Column: Playback and Tempo Controls */}
+        {/* Right Column: Tempo Controls */}
         <View style={styles.controlsSection}>
-          {/* Play / Stop Controls */}
-          <View style={styles.playStopGroup}>
-            <Pressable
-              style={[
-                styles.controlBtn,
-                isPlaying && styles.activeControlBtn,
-              ]}
-              onPress={() => setIsPlaying(true)}
-            >
-              <Text style={styles.controlBtnText}>▶ Play</Text>
-            </Pressable>
 
-            <Pressable
-              style={[
-                styles.controlBtn,
-                !isPlaying && styles.activeControlBtn,
-              ]}
-              onPress={() => setIsPlaying(false)}
-            >
-              <Text style={styles.controlBtnText}>⏹ Stop</Text>
-            </Pressable>
-          </View>
-
-          <Text style={styles.statusText}>
-            {isPlaying ? 'Playing...' : 'Stopped'}
-          </Text>
-
-          {/* Tempo Controls */}
+          {/* Tempo Controls - Bottom */}
           <View style={styles.tempoSection}>
             <View style={styles.tempoHeaderRow}>
               <Text style={styles.tempoTitle}>Tempo</Text>
@@ -257,19 +285,30 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-    paddingHorizontal: 16,
-    paddingVertical: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
 
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 2,
+    paddingLeft: 55,
+    paddingRight: 55,
+    paddingTop: 10,
+    minHeight: 55,
+  },
+
+  headerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
 
   mainTitle: {
     fontSize: 20,
+    lineHeight: 28,
     fontWeight: 'bold',
     color: '#111111',
   },
@@ -280,12 +319,27 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
 
-  saveButton: {
+  homeButton: {
     borderWidth: 1.5,
     borderColor: '#222222',
     borderRadius: 8,
     paddingVertical: 5,
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
+    backgroundColor: '#ffffff',
+  },
+
+  homeButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#111111',
+  },
+
+  saveButton: {
+    borderWidth: 1.5,
+    borderColor: '#222222',
+    borderRadius: 8,
+    paddingVertical: 7,
+    paddingHorizontal: 20,
   },
 
   saveButtonText: {
@@ -298,7 +352,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 16,
+    gap: 10,
   },
 
   gridSection: {
@@ -309,7 +363,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'baseline',
-    marginBottom: 6,
+    marginBottom: 3,
+    paddingHorizontal: 8,
   },
 
   sectionTitle: {
@@ -318,25 +373,18 @@ const styles = StyleSheet.create({
     color: '#111111',
   },
 
-  barInfo: {
-    fontSize: 11,
-    color: '#777777',
-  },
-
   horizontalScrollContainer: {
     flexGrow: 0,
   },
 
   stepNumbersRow: {
     flexDirection: 'row',
-    marginBottom: 4,
+    marginBottom: 2,
   },
 
   stepNumber: {
-    width: 24,
     textAlign: 'center',
-    marginRight: 3,
-    fontSize: 10,
+    fontSize: 9,
     color: '#888888',
   },
 
@@ -346,24 +394,23 @@ const styles = StyleSheet.create({
   },
 
   instrumentBlock: {
-    marginBottom: 8,
+    marginBottom: 3,
   },
 
   instrumentLabel: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '600',
     color: '#222222',
-    marginBottom: 2,
+    marginBottom: 1,
   },
 
   stepsRow: {
     flexDirection: 'row',
+    gap: 2,
   },
 
   step: {
-    width: 24,
-    height: 30,
-    marginRight: 3,
+    height: 20,
     borderRadius: 3,
     borderWidth: 1,
   },
@@ -381,7 +428,7 @@ const styles = StyleSheet.create({
   legendRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 6,
+    marginTop: 3,
   },
 
   legendBox: {
@@ -393,25 +440,22 @@ const styles = StyleSheet.create({
   },
 
   legendText: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#666666',
   },
 
   controlsSection: {
-    width: 170,
-  },
-
-  playStopGroup: {
-    flexDirection: 'row',
-    gap: 6,
+    width: 190,
+    paddingRight: 20,
+    justifyContent: 'flex-end',
   },
 
   controlBtn: {
-    flex: 1,
     borderWidth: 1.5,
     borderColor: '#222222',
     borderRadius: 6,
     paddingVertical: 6,
+    paddingHorizontal: 10,
     alignItems: 'center',
     backgroundColor: '#ffffff',
   },
@@ -429,12 +473,14 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 10,
     color: '#777777',
-    marginTop: 4,
-    marginBottom: 10,
+    marginLeft: 55,
+    marginBottom: 2,
   },
 
   tempoSection: {
-    marginTop: 4,
+    marginTop: 'auto',
+    marginBottom: 45,
+    marginLeft: 8,
   },
 
   tempoHeaderRow: {
