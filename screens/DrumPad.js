@@ -7,93 +7,80 @@ const DRUM_PADS = [
   {
     id: 'kick',
     name: 'KICK',
-    color: '#000000',
-    sound: require('../assets/sounds/'),
+    sound: require('../assets/sounds/kick-punch-beater.wav'),
   },
   {
     id: 'snare',
     name: 'SNARE',
-    color: '#000000',
-    sound: require('../assets/sounds/'),
+    sound: require('../assets/sounds/snare-crisp.wav'),
   },
   {
     id: 'closedHat',
     name: 'CLOSED HAT',
-    color: '#000000',
-    sound: require('../assets/sounds/'),
+    sound: require('../assets/sounds/hat-closed.wav'),
   },
   {
     id: 'openHat',
     name: 'OPEN HAT',
-    color: '#000000',
-    sound: require('../assets/sounds/'),
+    sound: require('../assets/sounds/hat-tight.wav'),
   },
   {
     id: 'clap',
     name: 'CLAP',
-    color: '#000000',
-    sound: require('../assets/sounds/'),
+    sound: require('../assets/sounds/clap-wide.wav'),
   },
   {
     id: 'tom',
     name: 'TOM',
-    color: '#000000',
-    sound: require('../assets/sounds/'),
+    sound: require('../assets/sounds/kick-boom-click.wav'),
   },
   {
     id: 'crash',
     name: 'CRASH',
-    color: '#000000',
-    sound: require('../assets/sounds/'),
+    sound: require('../assets/sounds/cymbal-modal.wav'),
   },
   {
     id: 'ride',
     name: 'RIDE',
-    color: '#000000',
-    sound: require('../assets/sounds/'),
+    sound: require('../assets/sounds/cymbal-short-fm.wav'),
   },
   {
     id: 'rim',
     name: 'RIM',
-    color: '#000000',
-    sound: require('../assets/sounds/'),
+    sound: require('../assets/sounds/kick-click-click.wav'),
   },
 ];
 
-// Individual pad component
 function DrumPadButton({ pad }) {
   const player = useAudioPlayer(pad.sound);
 
-  function handlePress() {
-    player.seekTo(0);
-    player.play();
+  async function handlePress() {
+    try {
+      await player.seekTo(0);
+      player.play();
+    } catch (error) {
+      console.log(`Error playing ${pad.name}:`, error);
+    }
   }
 
   return (
     <Pressable
-      onPress={handlePress}
       style={({ pressed }) => [
         styles.pad,
-        { backgroundColor: pad.color },
         pressed && styles.padPressed,
       ]}
+      onPress={handlePress}
     >
-      <Text style={styles.padText}>
-        {pad.name}
-      </Text>
+      <Text style={styles.padText}>{pad.name}</Text>
     </Pressable>
   );
 }
 
-export function DrumPad({ navigation }) {
+export default function DrumPad({ navigation }) {
   return (
-    <View style={styles.screen}>
-
-      <Text style={styles.header}>Drum Pad</Text>
-
-      <Text style={styles.subtitle}>
-        Tap a pad to play a sound
-      </Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>DRUM PAD</Text>
+      <Text style={styles.subtitle}>Tap a pad to play a sound</Text>
 
       <View style={styles.padContainer}>
         {DRUM_PADS.map((pad) => (
@@ -102,75 +89,62 @@ export function DrumPad({ navigation }) {
       </View>
 
       <NavBar active="DrumPad" navigation={navigation} />
-
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  container: {
     flex: 1,
-    backgroundColor: 'white',
-    paddingTop: 65,
-    paddingBottom: 85,
-    alignItems: 'center',
+    backgroundColor: '#111827',
+    paddingTop: 55,
+    paddingHorizontal: 16,
   },
 
-  header: {
-    fontSize: 32,
+  title: {
+    color: '#FFFFFF',
+    fontSize: 28,
     fontWeight: 'bold',
-    color: 'black',
     textAlign: 'center',
+    marginBottom: 6,
   },
 
   subtitle: {
-    color: 'grey',
+    color: '#9CA3AF',
+    fontSize: 14,
     textAlign: 'center',
-    marginTop: 8,
-    marginBottom: 18,
+    marginBottom: 20,
   },
 
   padContainer: {
-    width: '100%',
     flex: 1,
-    paddingHorizontal: 12,
-    paddingTop: 10,
-    paddingBottom: 15,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignContent: 'space-between',
-    gap: 8,
+    paddingBottom: 12,
   },
 
   pad: {
-    width: '31.8%',
+    width: '31%',
     height: '31%',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: 'black',
-    elevation: 4,
+    borderColor: '#D1D5DB',
   },
 
   padPressed: {
-    opacity: 0.65,
-    transform: [{ scale: 0.94 }],
+    backgroundColor: '#9CA3AF',
+    transform: [{ scale: 0.96 }],
   },
 
   padText: {
-    color: 'white',
-    fontSize: 12,
+    color: '#111827',
+    fontSize: 13,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-
-  footer: {
-    color: 'grey',
-    fontSize: 10,
-    textAlign: 'center',
-    marginBottom: 12,
-    letterSpacing: 2,
   },
 });
