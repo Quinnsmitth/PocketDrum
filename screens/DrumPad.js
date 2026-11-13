@@ -79,13 +79,18 @@ function DrumPadButton({ pad }) {
 export default function DrumPad({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>DRUM PAD</Text>
-      <Text style={styles.subtitle}>Tap a pad to play a sound</Text>
+      <View style={styles.content}>
+        <Text style={styles.title}>DRUM PAD</Text>
 
-      <View style={styles.padContainer}>
-        {DRUM_PADS.map((pad) => (
-          <DrumPadButton key={pad.id} pad={pad} />
-        ))}
+        <Text style={styles.subtitle}>
+          Tap a pad to play a sound
+        </Text>
+
+        <View style={styles.padContainer}>
+          {DRUM_PADS.map((pad) => (
+            <DrumPadButton key={pad.id} pad={pad} />
+          ))}
+        </View>
       </View>
 
       <NavBar active="DrumPad" navigation={navigation} />
@@ -96,9 +101,16 @@ export default function DrumPad({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#111827',
+    backgroundColor: '#000000',
+  },
+
+  content: {
+    flex: 1,
     paddingTop: 55,
     paddingHorizontal: 16,
+
+    // Reserve space for the absolute-positioned NavBar
+    paddingBottom: 160,
   },
 
   title: {
@@ -110,7 +122,7 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    color: '#9CA3AF',
+    color: '#999999',
     fontSize: 14,
     textAlign: 'center',
     marginBottom: 20,
@@ -122,7 +134,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignContent: 'space-between',
-    paddingBottom: 12,
   },
 
   pad: {
@@ -132,17 +143,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#D1D5DB',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
   },
 
   padPressed: {
-    backgroundColor: '#9CA3AF',
+    backgroundColor: '#999999',
     transform: [{ scale: 0.96 }],
   },
 
   padText: {
-    color: '#111827',
+    color: '#000000',
     fontSize: 13,
     fontWeight: 'bold',
     textAlign: 'center',
