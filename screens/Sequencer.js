@@ -1,5 +1,4 @@
-
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
   Text,
   View,
@@ -11,13 +10,64 @@ import {
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { useAudioPlayer, setAudioModeAsync } from 'expo-audio';
+
+const STEPS = 16;
+
+
+const SOUNDS = {
+  kick: require('../assets/sounds/kick-punch-beater.wav'),
+  snare: require('../assets/sounds/snare-crisp.wav'),
+  hihat: require('../assets/sounds/hat-closed.wav'),
+  cymbal: require('../assets/sounds/cymbal-modal.wav'),
+  tom1: require('../assets/sounds/kick-boom-click.wav'),
+  tom2: require('../assets/sounds/kick-soft-click.wav'),
+  bass: require('../assets/sounds/kick-hard-beater.wav'),
+};
+
+function restart(player) {
+  if (!player) return;
+  try {
+    player.seekTo(0);
+    player.play();
+  } catch (error) {
+    console.log('Playback error:', error);
+  }
+}
 
 export function Sequencer({ navigation }) {
   const { width } = useWindowDimensions();
 
+  // One audio player per row. Called individually so the hook order never changes.
+  const kickPlayer = useAudioPlayer(SOUNDS.kick);
+  const snarePlayer = useAudioPlayer(SOUNDS.snare);
+  const hihatPlayer = useAudioPlayer(SOUNDS.hihat);
+  const cymbalPlayer = useAudioPlayer(SOUNDS.cymbal);
+  const tom1Player = useAudioPlayer(SOUNDS.tom1);
+  const tom2Player = useAudioPlayer(SOUNDS.tom2);
+  const bassPlayer = useAudioPlayer(SOUNDS.bass);
+  const players = [
+    kickPlayer,
+    snarePlayer,
+    hihatPlayer,
+    cymbalPlayer,
+    tom1Player,
+    tom2Player,
+    bassPlayer,
+  ];
+  const playersRef = useRef(players);
+  playersRef.current = players;
+
+  // Let the sequencer play even when the iPhone's silent switch is on.
+  useEffect(() => {
+    setAudioModeAsync({ playsInSilentMode: true }).catch((error) =>
+      console.log('Audio mode error:', error)
+    );
+  }, []);
+
   // Dynamically size the 16 steps to fit the screen.
   const stepWidth = Math.max(22, Math.min(44, (width - 240) / 16));
-  const gridWidth = (stepWidth + 2) * 16;
+  const gridWidth = (stepWidth + 2) * STEPS;
 
   // Handle orientation when entering and leaving the Sequencer.
   useFocusEffect(
@@ -71,25 +121,74 @@ export function Sequencer({ navigation }) {
     'Cymbal',
     'Tom1',
     'Tom2',
-    'Base',
+    'Bass',
   ];
 
   // Initialize 7 rows of 16 steps.
   const [pattern, setPattern] = useState(
-    Array.from({ length: 7 }, () => Array(16).fill(false))
+    Array.from({ length: 7 }, () => Array(STEPS).fill(false))
   );
 
   const [bpm, setBpm] = useState(120);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentStep, setCurrentStep] = useState(-1);
 
-  // Toggle an individual step.
+  // Refs let the running loop see the latest pattern/BPM without restarting.
+  const patternRef = useRef(pattern);
+  const bpmRef = useRef(bpm);
+  patternRef.current = pattern;
+  bpmRef.current = bpm;
+
+  // Playback loop: 16th notes, with drift correction so tempo stays steady.
+  useEffect(() => {
+    if (!isPlaying) {
+      setCurrentStep(-1);
+      return undefined;
+    }
+
+    let step = 0;
+    let nextTime = Date.now();
+    let timer = null;
+    let cancelled = false;
+
+    const tick = () => {
+      if (cancelled) return;
+
+      patternRef.current.forEach((row, rowIndex) => {
+        if (row[step]) restart(playersRef.current[rowIndex]);
+      });
+      setCurrentStep(step);
+
+      step = (step + 1) % STEPS;
+      const stepMs = 60000 / bpmRef.current / 4;
+      nextTime += stepMs;
+
+      // If we fell far behind (app paused, etc.), resync instead of bursting.
+      const now = Date.now();
+      if (nextTime < now - stepMs) nextTime = now;
+
+      timer = setTimeout(tick, Math.max(0, nextTime - now));
+    };
+
+    tick();
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [isPlaying]);
+
+  // Toggle an individual step. Turning a step on previews its sound.
   const toggleStep = (rowIndex, stepIndex) => {
-    const newPattern = pattern.map((row) => [...row]);
+    const turningOn = !pattern[rowIndex][stepIndex];
 
-    newPattern[rowIndex][stepIndex] =
-      !newPattern[rowIndex][stepIndex];
+    setPattern((prev) => {
+      const newPattern = prev.map((row) => [...row]);
+      newPattern[rowIndex][stepIndex] = !newPattern[rowIndex][stepIndex];
+      return newPattern;
+    });
 
-    setPattern(newPattern);
+    if (turningOn && !isPlaying) restart(players[rowIndex]);
   };
 
   // Adjust BPM between 40 and 200.
@@ -180,7 +279,7 @@ export function Sequencer({ navigation }) {
 
                 {/* Step Numbers */}
                 <View style={styles.stepNumbersRow}>
-                  {Array.from({ length: 16 }).map((_, i) => (
+                  {Array.from({ length: STEPS }).map((_, i) => (
                     <Text
                       key={i}
                       style={[
@@ -190,6 +289,7 @@ export function Sequencer({ navigation }) {
                           marginRight: 2,
                         },
                         i % 4 === 0 && styles.boldStepNumber,
+                        i === currentStep && styles.currentStepNumber,
                       ]}
                     >
                       {i + 1}
@@ -222,6 +322,10 @@ export function Sequencer({ navigation }) {
                             step
                               ? styles.stepActive
                               : styles.stepInactive,
+                            stepIndex === currentStep &&
+                              (step
+                                ? styles.stepPlayingActive
+                                : styles.stepPlayingInactive),
                           ]}
                         />
                       ))}
@@ -423,6 +527,22 @@ const styles = StyleSheet.create({
   stepActive: {
     backgroundColor: '#1c1c1e',
     borderColor: '#1c1c1e',
+  },
+
+  currentStepNumber: {
+    color: '#ff6b00',
+    fontWeight: 'bold',
+  },
+
+  // Playhead column: highlighted as it sweeps across the grid.
+  stepPlayingInactive: {
+    backgroundColor: '#ffe8d6',
+    borderColor: '#ff6b00',
+  },
+
+  stepPlayingActive: {
+    backgroundColor: '#ff6b00',
+    borderColor: '#ff6b00',
   },
 
   legendRow: {
